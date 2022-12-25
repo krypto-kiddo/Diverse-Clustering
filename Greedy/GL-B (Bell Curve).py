@@ -12,7 +12,7 @@ for var in range(1,varStdQty):
     Student_Database.update({varStdID:random.randint(0,10)})
 print(Student_Database,"\n\n")
 
-
+varAvg = 0
 listStdIndex = []
 for var in Student_Database:
  listStdIndex += [Student_Database[var]]
@@ -28,41 +28,49 @@ for var in range (0,len(listSortedStd)//2):
     listBottomHalf += [listSortedStd[0-(var+1)]]
 
 
+listGroupSum = []
+varTotal = 0
 
 Group_Database = {}
 for var in range(0,(len(listTopHalf)//2)):
     varTempList = [listTopHalf[var],listTopHalf[-var],listBottomHalf[var],listBottomHalf[-(var)]]
+    listGroupSum+=[(listTopHalf[var]+listTopHalf[-var]+listBottomHalf[var]+listBottomHalf[-(var)])]
+    varTotal += (listTopHalf[var]+listTopHalf[-var]+listBottomHalf[var]+listBottomHalf[-(var)])
     varGrpName = "Group" + str(var+1)
     Group_Database.update({varGrpName:varTempList})
 print(Group_Database)
 
-listX = []
-listY = []
-listZ = []
-varCount = 1
-varSum = 0
-varAvg = 0
-for var in Group_Database:
-    for num in Group_Database[var]:
-        varSum+=num
-    listY+=[varSum]
-    listX+=[varCount]
-    varSum = 0
-    varCount+=1
-for num in listY:
-    varSum+=num
-varAvg = varSum/len(listY)
-listTop = []
-listBot = []
-for num in range(0,len(listX)):
-    listZ+=[varAvg]
-    listTop += [40]
-    listBot += [0]
-graphix.plot(listX,listY)
-graphix.plot(listX,listZ)
-graphix.plot(listX,listTop)
-graphix.plot(listX,listBot)
+varAvg = varTotal/len(listGroupSum)
+listVariance = []
+varTemp = 0
+for num in range (0,(2*len(listGroupSum)+1)):
+    listVariance+=[0]
+for num in listGroupSum:
+    varTemp = int(num-varAvg)
+    listVariance[len(listGroupSum)+varTemp]+=1
 
-graphix.ylabel("Gross Rating (Group)")
-graphix.xlabel("Group Number")
+#print("\n\n\n\n\n\n",listVariance)
+
+listX = []
+listY = listVariance
+listZ = []
+varCount = -(len(listGroupSum))
+varSum = 0
+
+for num in range(0,(2*(len(listGroupSum)))+1):
+    listX+=[varCount]
+    varCount+=1
+#for num in listY:
+#    varSum+=num
+
+
+
+print("\n\n\n\n\n\n",listX)
+print("\n",listY)
+graphix.plot(listX,listY)
+
+
+
+graphix.ylabel("Number of Groups")
+graphix.xlabel("Standard Deviation")
 graphix.show()
